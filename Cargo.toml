@@ -1,0 +1,11 @@
+[package]
+name = "ramdev"
+version = "0.0.1"
+authors = ["Lee Smet <lee.smet@hotmail.com>"]
+
+[lib]
+crate-type = ["staticlib"]
+
+[build-dependencies]
+bindgen = "0.39"
+shlex = "0.1.1"
