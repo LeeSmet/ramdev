@@ -70,10 +70,7 @@ fn main() {
         // push the filtered compiler args to clang
         .clang_args(clang_args.iter())
         .header(curr_wd.join("linux_headers.h").to_string_lossy())
-        // Ignore some unsafe types, can fix if it turns out we need them
-        .opaque_type("lock_class_key")  
-        .opaque_type("vm_userfaultfd_ctx")
-        .opaque_type("lockdep_map")
+        // "timex" gives some issues when generated, in the embedded bitfield
         .opaque_type("timex")
         // uncommented the line below if you want to generate some fancy call/dependancy graph.
         // actually a dot file. If you want an image, you better have a lot of time to wait while it

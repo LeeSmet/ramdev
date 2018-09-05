@@ -10,6 +10,9 @@
 #![allow(non_snake_case)]
 // Obviously we can't use std in the kernel
 #![no_std]
+// Some of the generated bindings can be empty structs
+// depending on kernel config, rust doesn't really like that
+#![allow(improper_ctypes)]
 
 // bring os module in scope
 mod os;
