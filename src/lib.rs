@@ -13,6 +13,8 @@
 // Some of the generated bindings can be empty structs
 // depending on kernel config, rust doesn't really like that
 #![allow(improper_ctypes)]
+// Setup the allocator wrapper for the kernel
+#![feature(allocator_api)]
 
 // bring os module in scope
 mod os;
@@ -24,16 +26,22 @@ pub mod rust_behaviour;
 use os::kernel;
 use os::raw_c_types as c_type;
 
+#[global_allocator]
+static ALLOCATOR: os::allocator::Allocator = os::allocator::Allocator {};
+
 // const DEVICE_SIZE: i32 = 1024; // 1024 sectors
 
 static mut DEVICE_MAJOR: c_type::c_int = 0;
+
+static DEVICE_NAME: &'static str = "ramdev";
 
 #[no_mangle]
 /// Module entry point
 pub fn init_module() -> c_type::c_int {
     println!("init");
     unsafe {
-        DEVICE_MAJOR = kernel::register_blkdev(0, b"test" as *const c_type::c_char);
+        DEVICE_MAJOR =
+            kernel::register_blkdev(0, DEVICE_NAME.as_bytes().as_ptr() as *const c_type::c_char);
     }
     return 0;
 }
@@ -47,7 +55,7 @@ pub fn cleanup_module() {
         if !(DEVICE_MAJOR < 0) {
             kernel::unregister_blkdev(
                 DEVICE_MAJOR as c_type::c_uint,
-                b"test" as *const c_type::c_char,
+                DEVICE_NAME.as_bytes().as_ptr() as *const c_type::c_char,
             );
         }
     }
