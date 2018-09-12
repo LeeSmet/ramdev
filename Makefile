@@ -18,4 +18,4 @@ all modules:
 clean:
 	$(MAKE) -C $(KERNEL_SOURCE) M=$(PWD) clean
 	cargo clean
-	rm src/os/kernel.rs
+	rm src/os/c_kernel.rs

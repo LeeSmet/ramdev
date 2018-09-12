@@ -1,6 +1,5 @@
 //! A block device written in rust
 #![feature(lang_items)]
-#![feature(panic_implementation)]
 #![deny(missing_docs, warnings)]
 #![feature(panic_handler)]
 // Ignore warnings in bindings
@@ -24,24 +23,22 @@ mod print;
 pub mod rust_behaviour;
 
 use os::kernel;
-use os::raw_c_types as c_type;
 
 #[global_allocator]
 static ALLOCATOR: os::allocator::Allocator = os::allocator::Allocator {};
 
 // const DEVICE_SIZE: i32 = 1024; // 1024 sectors
 
-static mut DEVICE_MAJOR: c_type::c_int = 0;
+static mut DEVICE_MAJOR: i32 = 0;
 
 static DEVICE_NAME: &'static str = "ramdev";
 
 #[no_mangle]
 /// Module entry point
-pub fn init_module() -> c_type::c_int {
+pub fn init_module() -> i32 {
     println!("init");
     unsafe {
-        DEVICE_MAJOR =
-            kernel::register_blkdev(0, DEVICE_NAME.as_bytes().as_ptr() as *const c_type::c_char);
+        DEVICE_MAJOR = kernel::register_blockdevice(DEVICE_NAME).unwrap();
     }
     return 0;
 }
@@ -53,10 +50,7 @@ pub fn cleanup_module() {
     // The if check is also unsafe as it accesses a mutable global variable
     unsafe {
         if !(DEVICE_MAJOR < 0) {
-            kernel::unregister_blkdev(
-                DEVICE_MAJOR as c_type::c_uint,
-                DEVICE_NAME.as_bytes().as_ptr() as *const c_type::c_char,
-            );
+            kernel::unregister_blockdevice(DEVICE_MAJOR, DEVICE_NAME);
         }
     }
     println!("exit");

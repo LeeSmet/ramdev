@@ -12,4 +12,4 @@ Cargo.lock
 *.ko
 .dot
 .vscode/
-src/os/kernel.rs
+src/os/c_kernel.rs

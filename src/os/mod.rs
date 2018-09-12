@@ -1,3 +1,4 @@
 pub mod allocator;
+mod c_kernel;
 pub mod kernel;
-pub mod raw_c_types;
+mod raw_c_types;

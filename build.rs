@@ -81,10 +81,10 @@ fn main() {
 
     // change back to old working directory (rust directory)
     assert!(env::set_current_dir(&curr_wd).is_ok());
-    // Write the bindings to the $BINDING_DIR/kernel.rs file.
+    // Write the bindings to the $BINDING_DIR/c_kernel.rs file.
     let binding_path = PathBuf::from(env::var("BINDING_DIR").unwrap());
     bindings
-        .write_to_file(binding_path.join("kernel.rs"))
+        .write_to_file(binding_path.join("c_kernel.rs"))
         .expect("Couldn't write bindings!");
-    println!("Wrote bindings to {:?}", binding_path.join("kernel.rs"));
+    println!("Wrote bindings to {:?}", binding_path.join("c_kernel.rs"));
 }
