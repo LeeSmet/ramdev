@@ -20,10 +20,10 @@ pub fn register_blockdevice(device_name: &str) -> Result<i32, i32> {
 }
 
 /// unregister the block device with given name and major number
-pub fn unregister_blockdevice(dev_major: i32, dev_name: &str) {
+pub fn unregister_blockdevice(dev_major: i32, dev_name: &str) -> Result<(), &str> {
     // Can only unregister positive major_dev numbers
     if dev_major <= 0 {
-        return;
+        return Err("Can't unregister negative block device number");
     }
     let str_ptr = dev_name.as_ptr() as *const c_type::c_char;
     unsafe {
@@ -31,4 +31,5 @@ pub fn unregister_blockdevice(dev_major: i32, dev_name: &str) {
         // this expects a c_uint.
         kernel::unregister_blkdev(dev_major as c_type::c_uint, str_ptr);
     }
+    Ok(())
 }

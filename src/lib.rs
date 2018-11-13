@@ -1,7 +1,6 @@
 //! A block device written in rust
 #![feature(lang_items)]
 #![deny(missing_docs, warnings)]
-#![feature(panic_handler)]
 // Ignore warnings in bindings
 #![allow(dead_code)]
 #![allow(non_upper_case_globals)]
@@ -47,11 +46,14 @@ pub fn init_module() -> i32 {
 /// Module exit point
 pub fn cleanup_module() {
     println!("Clean up");
-    // The if check is also unsafe as it accesses a mutable global variable
+    cleanup();
+    println!("exit");
+}
+
+fn cleanup() {
     unsafe {
         if !(DEVICE_MAJOR < 0) {
-            kernel::unregister_blockdevice(DEVICE_MAJOR, DEVICE_NAME);
+            kernel::unregister_blockdevice(DEVICE_MAJOR, DEVICE_NAME).unwrap();
         }
     }
-    println!("exit");
 }
