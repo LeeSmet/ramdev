@@ -15,10 +15,8 @@
 #![feature(allocator_api)]
 
 // bring os module in scope
-mod os;
-
 #[macro_use]
-mod print;
+mod os;
 pub mod rust_behaviour;
 
 use os::kernel;
